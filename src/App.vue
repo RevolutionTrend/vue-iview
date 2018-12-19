@@ -1,22 +1,9 @@
 <template>
   <div id="app">
-    <!-- <Layout>
-      <Sider>Sider</Sider>
-      <Layout>
-        <Header>
-          <div id="nav">
-            <router-link to="/">Home</router-link>|
-            <router-link to="/about">About</router-link>
-          </div>
-        </Header>
-        <Content>
-          <router-view/>
-        </Content>
-        <Footer></Footer>
-      </Layout>
-    </Layout>-->
     <Layout>
-      <Sider>Sider</Sider>
+      <Sider ref="SideBar" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+        <SideBar :isCollapsed="isCollapsed"/>
+      </Sider>
       <Layout>
         <Header>
           <div id="nav">
@@ -42,7 +29,6 @@
   color: #2c3e50;
 }
 #nav {
-  padding: 30px;
   a {
     font-weight: bold;
     color: #2c3e50;
@@ -60,19 +46,22 @@
 <script>
 import Vue from "vue";
 import { Layout, Header, Sider, Content, Footer } from "iview";
+import SideBar from "./components/SideBar.vue";
 
-// Vue.use(Layout);
-// Vue.use(Header);
-// Vue.use(Sider);
-// Vue.use(Content);
-// Vue.use(Footer);
 Vue.component("Layout", Layout);
 Vue.component("Header", Header);
 Vue.component("Sider", Sider);
 Vue.component("Content", Content);
 Vue.component("Footer", Footer);
+Vue.component("SideBar", SideBar);
+
 export default {
-  name: "App"
+  name: "App",
+  data() {
+    return {
+      isCollapsed: false
+    };
+  }
 };
 </script>
 

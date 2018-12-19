@@ -5,6 +5,7 @@ import store from './store';
 
 import 'iview/dist/styles/iview.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import './style.css';
 
 Vue.config.productionTip = false;
 

@@ -1,14 +1,13 @@
 <template>
   <div id="app">
     <Layout>
-      <Sider ref="SideBar" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
-        <SideBar :isCollapsed="isCollapsed"/>
+      <Sider ref="sidebar" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+        <SideBar/>
       </Sider>
       <Layout>
         <Header>
-          <div id="nav">
-            <router-link to="/">Home</router-link>|
-            <router-link to="/about">About</router-link>
+          <div class="menu-icon" @click="collapsedSider">
+            <i class="fas fa-bars"></i>
           </div>
         </Header>
         <Content>
@@ -28,14 +27,20 @@
   text-align: center;
   color: #2c3e50;
 }
-#nav {
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.ivu-layout-sider {
+  overflow: hidden;
+}
+.ivu-layout-header {
+  padding-left: 0 !important;
+}
+.menu-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: #fff;
 }
 .ivu-layout {
   height: 100%;
@@ -59,9 +64,16 @@ export default {
   name: "App",
   data() {
     return {
-      isCollapsed: false
+      isCollapsed: this.$store.state.isCollapsed
     };
-  }
+  },
+  methods: {
+    collapsedSider() {
+      this.$store.commit("collapseMenu");
+      this.$refs.sidebar.toggleCollapse();
+    }
+  },
+  computed: {}
 };
 </script>
 

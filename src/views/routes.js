@@ -16,13 +16,16 @@ const routes = [{
     path: '/status',
     icon: 'fa-tachometer-alt',
     children: [{
-        name: 'Device',
-        path: '/status/device',
-        component: Device
-    }, {
         name: 'System',
         path: '/status/system',
         component: System
+    }, {
+        name: 'Connection',
+        path: '/status/connection'
+    }, {
+        name: 'Device',
+        path: '/status/device',
+        component: Device
     }]
 }, {
     name: 'Support',

@@ -52,6 +52,7 @@
 import Vue from "vue";
 import { Layout, Header, Sider, Content, Footer } from "iview";
 import SideBar from "./components/SideBar.vue";
+import { CHANGEMENUCOLLAPSE } from "./vuex/actions.js";
 
 Vue.component("Layout", Layout);
 Vue.component("Header", Header);
@@ -69,7 +70,8 @@ export default {
   },
   methods: {
     collapsedSider() {
-      this.$store.commit("collapseMenu");
+      // this.$store.commit("collapseMenu");
+      this.$store.dispatch(CHANGEMENUCOLLAPSE);
       this.$refs.sidebar.toggleCollapse();
     }
   },

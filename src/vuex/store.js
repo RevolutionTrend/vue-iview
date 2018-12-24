@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex from 'vuex';
+
+import { CHANGEMENUCOLLAPSE } from './actions';
 
 Vue.use(Vuex)
 
@@ -13,6 +15,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-
+    [CHANGEMENUCOLLAPSE](context) {
+      context.commit('collapseMenu');
+    }
   }
-})
+});

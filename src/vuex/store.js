@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex';
 
-import { CHANGEMENUCOLLAPSE, MENUCHANGETITLE } from './actions';
+import { CHANGEMENUCOLLAPSE, MENUCHANGETITLE, OPTIONCHANGEPAT } from './actions';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     isCollapsed: false,
-    title: 'Home'
+    title: 'Home',
+    path: '/'
   },
   mutations: {
     collapseMenu(state) {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     changeTitle(state, newTitle) {
       state.title = newTitle;
+    },
+    changePath(state, newPath) {
+      state.path = newPath;
     }
   },
   actions: {
@@ -24,6 +28,9 @@ export default new Vuex.Store({
     },
     [MENUCHANGETITLE]({ commit }, str) {
       commit('changeTitle', str);
+    },
+    [OPTIONCHANGEPAT]({ commit }, pathname) {
+      commit('changePath', pathname);
     }
   }
 });

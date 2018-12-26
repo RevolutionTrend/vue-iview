@@ -16,7 +16,9 @@
         </Header>
         <Content>
           <Breadcrumb>
-            <BreadcrumbItem to="/" @click="clickHome">Home</BreadcrumbItem>
+            <BreadcrumbItem to="/">
+              <span @click="clickHome">Home</span>
+            </BreadcrumbItem>
             <BreadcrumbItem v-if="showSecond">{{getTitle}}</BreadcrumbItem>
           </Breadcrumb>
           <router-view/>
@@ -83,7 +85,7 @@ import {
 } from "iview";
 import SideBar from "./components/SideBar.vue";
 import PageTop from "./components/PageTop.vue";
-import { CHANGEMENUCOLLAPSE } from "./vuex/actions.js";
+import { CHANGEMENUCOLLAPSE, OPTIONCHANGEPAT } from "./vuex/actions.js";
 
 Vue.component("Layout", Layout);
 Vue.component("Header", Header);
@@ -108,7 +110,7 @@ export default {
       this.$store.dispatch(CHANGEMENUCOLLAPSE);
     },
     clickHome() {
-      console.log("click home");
+      this.$store.dispatch(OPTIONCHANGEPAT, "/");
     }
   },
   computed: {
@@ -116,7 +118,7 @@ export default {
       return this.$store.state.isCollapsed;
     },
     showSecond() {
-      return this.$store.state.title !== "Home";
+      return this.$store.state.path !== "/" || location.pathname !== "/";
     },
     getTitle() {
       return this.$store.state.title;

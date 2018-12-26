@@ -13,7 +13,6 @@
       :accordion="isAccordion"
       @on-select="changeTitle"
       @on-open-change="changeSubCollapse"
-      @breadcrumb-home="selectHome"
     >
       <component
         v-for="item in routes"
@@ -87,7 +86,11 @@
 import Vue from "vue";
 import { Menu, MenuItem, Submenu } from "iview";
 import routes from "../views/routes.js";
-import { MENUCHANGETITLE, CHANGEMENUCOLLAPSE } from "../vuex/actions.js";
+import {
+  MENUCHANGETITLE,
+  CHANGEMENUCOLLAPSE,
+  OPTIONCHANGEPAT
+} from "../vuex/actions.js";
 
 Vue.component("Menu", Menu);
 Vue.component("MenuItem", MenuItem);
@@ -134,12 +137,14 @@ export default {
   computed: {
     activeName() {
       let nowName = "/";
-      const currentPage = this.$router.options.routes.find(function(e) {
-        return e.path === pathname;
-      });
-      if (currentPage) {
-        nowName = currentPage.path;
-        this.$store.dispatch(MENUCHANGETITLE, currentPage.name);
+      if (location.pathname !== "/") {
+        const currentPage = this.$router.options.routes.find(function(e) {
+          return e.path === pathname;
+        });
+        if (currentPage) {
+          nowName = currentPage.path;
+          this.$store.dispatch(MENUCHANGETITLE, currentPage.name);
+        }
       }
       return nowName;
     },
@@ -153,6 +158,9 @@ export default {
       return this.$store.state.isCollapsed
         ? "collapsedLogo"
         : "unCollapsedLogo";
+    },
+    curPath() {
+      return this.$store.state.path;
     }
   },
   methods: {
@@ -163,6 +171,7 @@ export default {
       });
       if (toPage) {
         this.$store.dispatch(MENUCHANGETITLE, toPage.name);
+        this.$store.dispatch(OPTIONCHANGEPAT, path);
       }
       if (this.$store.state.isCollapsed) {
         this.$store.dispatch(CHANGEMENUCOLLAPSE);
@@ -172,10 +181,15 @@ export default {
       if (this.$store.state.isCollapsed) {
         this.$store.dispatch(CHANGEMENUCOLLAPSE);
       }
-    },
-    selectHome() {
-      console.log("event emitted");
-      this.$refs.sideMenu.updateActiveName();
+    }
+  },
+  watch: {
+    curPath() {
+      if (this.$store.state.path !== this.$refs.sideMenu.currentActiveName) {
+        console.log("currentActiveName not equals pathname");
+        this.$refs.sideMenu.currentActiveName = location.pathname;
+        this.$refs.sideMenu.updateActiveName();
+      }
     }
   }
 };

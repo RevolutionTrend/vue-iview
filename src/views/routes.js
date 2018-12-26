@@ -39,7 +39,7 @@ const routes = [{
         name: 'Wan',
         path: '/support/wan',
         children: [{
-            name: 'Status',
+            name: 'Wan Status',
             path: '/support/wan/status',
             component: WanStatus
         }]

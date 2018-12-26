@@ -4,6 +4,7 @@
       <img src="../assets/logo.png">
     </div>
     <Menu
+      ref="sideMenu"
       :active-name="activeName"
       :open-names="openNames"
       theme="dark"
@@ -12,6 +13,7 @@
       :accordion="isAccordion"
       @on-select="changeTitle"
       @on-open-change="changeSubCollapse"
+      @breadcrumb-home="selectHome"
     >
       <component
         v-for="item in routes"
@@ -170,6 +172,10 @@ export default {
       if (this.$store.state.isCollapsed) {
         this.$store.dispatch(CHANGEMENUCOLLAPSE);
       }
+    },
+    selectHome() {
+      console.log("event emitted");
+      this.$refs.sideMenu.updateActiveName();
     }
   }
 };

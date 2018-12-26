@@ -15,6 +15,10 @@
           <PageTop/>
         </Header>
         <Content>
+          <Breadcrumb>
+            <BreadcrumbItem to="/" @click="clickHome">Home</BreadcrumbItem>
+            <BreadcrumbItem v-if="showSecond">{{getTitle}}</BreadcrumbItem>
+          </Breadcrumb>
           <router-view/>
         </Content>
         <Footer></Footer>
@@ -53,11 +57,30 @@
 .ivu-layout-content {
   padding: 20px;
 }
+.ivu-breadcrumb {
+  width: 100%;
+  height: 30px;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.ivu-breadcrumb span {
+  font-size: 20px;
+}
 </style>
 
 <script>
 import Vue from "vue";
-import { Layout, Header, Sider, Content, Footer } from "iview";
+import {
+  Layout,
+  Header,
+  Sider,
+  Content,
+  Footer,
+  Breadcrumb,
+  BreadcrumbItem
+} from "iview";
 import SideBar from "./components/SideBar.vue";
 import PageTop from "./components/PageTop.vue";
 import { CHANGEMENUCOLLAPSE } from "./vuex/actions.js";
@@ -67,6 +90,8 @@ Vue.component("Header", Header);
 Vue.component("Sider", Sider);
 Vue.component("Content", Content);
 Vue.component("Footer", Footer);
+Vue.component("Breadcrumb", Breadcrumb);
+Vue.component("BreadcrumbItem", BreadcrumbItem);
 Vue.component("SideBar", SideBar);
 Vue.component("PageTop", PageTop);
 
@@ -81,11 +106,20 @@ export default {
     collapsedSider() {
       // this.$store.commit("collapseMenu");
       this.$store.dispatch(CHANGEMENUCOLLAPSE);
+    },
+    clickHome() {
+      console.log("click home");
     }
   },
   computed: {
     getCollapseStatus() {
       return this.$store.state.isCollapsed;
+    },
+    showSecond() {
+      return this.$store.state.title !== "Home";
+    },
+    getTitle() {
+      return this.$store.state.title;
     }
   }
 };

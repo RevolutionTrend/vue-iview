@@ -58,6 +58,7 @@ export default {
   methods: {
     collapsedSider() {
       this.$store.dispatch(CHANGEMENUCOLLAPSE);
+      console.log(this.$refs);
     }
   },
   computed: {

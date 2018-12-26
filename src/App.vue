@@ -1,14 +1,18 @@
 <template>
   <div id="app">
     <Layout>
-      <Sider ref="sidebar" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+      <Sider
+        ref="sidebar"
+        hide-trigger
+        collapsible
+        :collapsed-width="78"
+        :value="getCollapseStatus"
+      >
         <SideBar/>
       </Sider>
       <Layout>
         <Header>
-          <div class="menu-icon" @click="collapsedSider">
-            <i class="fas fa-bars"></i>
-          </div>
+          <PageTop/>
         </Header>
         <Content>
           <router-view/>
@@ -31,7 +35,7 @@
   overflow: hidden;
 }
 .ivu-layout-header {
-  padding-left: 0 !important;
+  padding: 0 !important;
 }
 .menu-icon {
   width: 60px;
@@ -46,12 +50,16 @@
   height: 100%;
   width: 100%;
 }
+.ivu-layout-content {
+  padding: 20px;
+}
 </style>
 
 <script>
 import Vue from "vue";
 import { Layout, Header, Sider, Content, Footer } from "iview";
 import SideBar from "./components/SideBar.vue";
+import PageTop from "./components/PageTop.vue";
 import { CHANGEMENUCOLLAPSE } from "./vuex/actions.js";
 
 Vue.component("Layout", Layout);
@@ -60,6 +68,7 @@ Vue.component("Sider", Sider);
 Vue.component("Content", Content);
 Vue.component("Footer", Footer);
 Vue.component("SideBar", SideBar);
+Vue.component("PageTop", PageTop);
 
 export default {
   name: "App",
@@ -72,10 +81,13 @@ export default {
     collapsedSider() {
       // this.$store.commit("collapseMenu");
       this.$store.dispatch(CHANGEMENUCOLLAPSE);
-      this.$refs.sidebar.toggleCollapse();
     }
   },
-  computed: {}
+  computed: {
+    getCollapseStatus() {
+      return this.$store.state.isCollapsed;
+    }
+  }
 };
 </script>
 

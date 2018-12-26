@@ -4,11 +4,14 @@
       <img src="../assets/logo.png">
     </div>
     <Menu
-      active-name="/"
+      :active-name="activeName"
+      :open-names="openNames"
       theme="dark"
       width="auto"
       :class="menuitemClasses"
       :accordion="isAccordion"
+      @on-select="changeTitle"
+      @on-open-change="changeSubCollapse"
     >
       <component
         v-for="item in routes"
@@ -82,74 +85,62 @@
 import Vue from "vue";
 import { Menu, MenuItem, Submenu } from "iview";
 import routes from "../views/routes.js";
+import { MENUCHANGETITLE, CHANGEMENUCOLLAPSE } from "../vuex/actions.js";
 
 Vue.component("Menu", Menu);
 Vue.component("MenuItem", MenuItem);
 Vue.component("Submenu", Submenu);
 
-// const getMenuItem = item => `
-//     <MenuItem name="${item.path}">
-//         <i v-if="${item.hasOwnProperty("icon")}" class="fas ${item.icon}"></i>
-//         <span>${item.name}</span>
-//     </MenuItem>
-// `;
-
-// const getSubMenu = item => {
-//   let str = `<Submenu name=${item.path}>`;
-//   for (let i = 0; i < item.children.length; i++) {
-//     if (item.children[i].hasOwnProperty("children")) {
-//       str += `
-//                 <template slot="title">
-//                     <i v-if="${item.hasOwnProperty("icon")}" class="fas ${
-//         item.icon
-//       }"></i>
-//                     <span>${item.name}</span>
-//                 </template>
-//             `;
-//       str += getSubMenu(item.children[i]);
+// const getSingleArr = list => {
+//   let arr = [];
+//   for (let i = 0; i < list.length; i++) {
+//     if (list[i].hasOwnProperty("children")) {
+//       arr = [...arr, ...getSingleArr(list[i].children)];
 //     } else {
-//       str += getMenuItem(item.children[i]);
+//       arr.push(list[i]);
 //     }
 //   }
-
-//   str += "</Submenu>";
-//   return str;
+//   return arr;
 // };
 
-// const getMenuTemplate = () => {
-//   let str =
-//     '<Menu active-name="/" theme="dark" width="auto" :class="menuitemClasses">';
-//   for (let i = 0; i < routes.length; i++) {
-//     if (routes[i].hasOwnProperty("children")) {
-//       str += getSubMenu(routes[i]);
-//     } else {
-//       str += getMenuItem(routes[i]);
-//     }
-//   }
+// const routesArr = getSingleArr(routes);
 
-//   str += "</Menu>";
-//   return str;
-// };
-
-// const MyMenu = {
-//   props: ["isCollapsed", "menuitemClasses"],
-//   template: getMenuTemplate(),
-//   components: {
-//     Menu,
-//     MenuItem,
-//     Submenu
-//   }
-// };
+// const defaultPage = routesArr.find(function(e) {
+//   return e.path === location.pathname;
+// });
+// console.log(defaultPage);
+const pathname = location.pathname;
+let openNames = [];
+if (pathname.lastIndexOf("/") !== 0) {
+  const nameArr = pathname.split("/");
+  let nameStr = "";
+  for (let i = 1; i < nameArr.length - 1; i++) {
+    nameStr += "/" + nameArr[i];
+    openNames.push(nameStr);
+  }
+}
 
 export default {
   name: "SideBar",
   data() {
     return {
       routes,
+      openNames,
       isAccordion: true
     };
   },
   computed: {
+    activeName() {
+      let nowName = "/";
+      const currentPage = this.$router.options.routes.find(function(e) {
+        return e.path === pathname;
+      });
+      if (currentPage) {
+        nowName = currentPage.path;
+        this.$store.dispatch(MENUCHANGETITLE, currentPage.name);
+      }
+      return nowName;
+    },
     menuitemClasses() {
       return [
         "menu-item",
@@ -160,6 +151,25 @@ export default {
       return this.$store.state.isCollapsed
         ? "collapsedLogo"
         : "unCollapsedLogo";
+    }
+  },
+  methods: {
+    changeTitle(path) {
+      console.log(path);
+      const toPage = this.$router.options.routes.find(function(e) {
+        return e.path === path;
+      });
+      if (toPage) {
+        this.$store.dispatch(MENUCHANGETITLE, toPage.name);
+      }
+      if (this.$store.state.isCollapsed) {
+        this.$store.dispatch(CHANGEMENUCOLLAPSE);
+      }
+    },
+    changeSubCollapse() {
+      if (this.$store.state.isCollapsed) {
+        this.$store.dispatch(CHANGEMENUCOLLAPSE);
+      }
     }
   }
 };
@@ -259,6 +269,9 @@ export default {
   font-size: 22px;
 }
 .collapsed-menu .ivu-menu-submenu-title-icon {
+  display: none;
+}
+.collapsed-menu .ivu-menu-submenu ul {
   display: none;
 }
 @keyframes bigToSmall {

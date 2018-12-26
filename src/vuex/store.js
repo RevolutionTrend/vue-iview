@@ -1,22 +1,29 @@
 import Vue from 'vue'
 import Vuex from 'vuex';
 
-import { CHANGEMENUCOLLAPSE } from './actions';
+import { CHANGEMENUCOLLAPSE, MENUCHANGETITLE } from './actions';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isCollapsed: false
+    isCollapsed: false,
+    title: 'Home'
   },
   mutations: {
     collapseMenu(state) {
       state.isCollapsed = !state.isCollapsed;
+    },
+    changeTitle(state, newTitle) {
+      state.title = newTitle;
     }
   },
   actions: {
-    [CHANGEMENUCOLLAPSE](context) {
-      context.commit('collapseMenu');
+    [CHANGEMENUCOLLAPSE]({ commit }) {
+      commit('collapseMenu');
+    },
+    [MENUCHANGETITLE]({ commit }, str) {
+      commit('changeTitle', str);
     }
   }
 });

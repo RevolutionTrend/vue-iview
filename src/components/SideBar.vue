@@ -177,7 +177,17 @@ export default {
         this.$store.dispatch(CHANGEMENUCOLLAPSE);
       }
     },
-    changeSubCollapse() {
+    changeSubCollapse(arg) {
+      const pathStr = location.pathname;
+      if (arg && arg.length === 1 && pathStr.includes(arg[0])) {
+        const dividers = pathStr.match(/\//g);
+        if (dividers.length === 3) {
+          this.$refs.sideMenu.openedNames.push(
+            pathStr.substring(0, pathStr.lastIndexOf("/"))
+          );
+          this.$refs.sideMenu.updateOpened();
+        }
+      }
       if (this.$store.state.isCollapsed) {
         this.$store.dispatch(CHANGEMENUCOLLAPSE);
       }
